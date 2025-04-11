@@ -62,10 +62,13 @@ public abstract class Student {
     public abstract void performSkill();
 
     private void setBirthday(Date birthday) {
-        if (birthday == null || birthday.after(new Date())) {
-            throw new IllegalArgumentException("Neplatné datum narození");
-        }
+        if (birthday == null || birthday.after(new Date())) throw new IllegalArgumentException("Neplatné datum narození");
 
         this.birthday = birthday;
+    }
+
+    @Override
+    public String toString() {
+        return this.getId() + "\t" + this.getFirstName() + " " + this.getLastName() + "\t" + this.getBirthday();
     }
 }

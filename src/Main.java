@@ -2,10 +2,11 @@ import java.util.Date;
 
 public class Main {
     public static void main(String[] args) {
-        CybersecStudent cybersecStudent = new CybersecStudent("Jan", "Novák", new Date());
-        cybersecStudent.performSkill();
+        Database database = new Database();
+        TelecomStudent telecomStudent = database.addTelecomStudent("Jan", "Novák", new Date());
+        CybersecStudent cybersecStudent = database.addCybersecStudent("Petr", "Svoboda", new Date());
 
-        TelecomStudent telecomStudent = new TelecomStudent("Petr", "Čech", new Date());
-        telecomStudent.performSkill();
+        database.printAllStudents();
+
     }
 }
