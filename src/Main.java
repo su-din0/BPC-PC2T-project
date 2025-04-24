@@ -9,6 +9,7 @@ public class Main {
         database.printAllStudents();
         
         System.out.println("test");
+        System.out.println("test");
 
     }
 }
