@@ -7,6 +7,7 @@ public class Main {
         CybersecStudent cybersecStudent = database.addCybersecStudent("Petr", "Svoboda", new Date());
 
         database.printAllStudents();
+        database.printAllStudents();
 
     }
 }
