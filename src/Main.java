@@ -7,10 +7,14 @@ public class Main {
         CybersecStudent cybersecStudent = database.addCybersecStudent("Petr", "Svoboda", new Date());
 
         database.printAllStudents();
+<<<<<<< HEAD
         
         System.out.println("test");
         System.out.println("test");
         System.out.println("test");
+=======
+        database.printAllStudents();
+>>>>>>> 14bd3e836a23fb12e8e396c0664419b7c589a78f
 
     }
 }
