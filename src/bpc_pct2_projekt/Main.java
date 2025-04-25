@@ -3,7 +3,7 @@ package bpc_pct2_projekt;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 import Database_sql.DatabaseInitializer;
@@ -33,7 +33,7 @@ public class Main {
             System.out.print("Zadej volbu: ");
 
             int volba;
-            System.out.print("Zadej volbu: ");
+            
             String input = scanner.nextLine();
 
             try {
@@ -48,10 +48,29 @@ public class Main {
                 case 1:
                 	 System.out.println("\n--- Přidání nového studenta ---");
                 	    System.out.print("Zadejte jméno studenta: ");
-                	    String firstName = scanner.nextLine();
-
+                	    String firstName = "";
+                	    
+                	  
+                	    try {
+                	        firstName = scanner.nextLine().trim();
+                	        if (firstName.isEmpty()) {
+                	            System.out.println("Jméno nesmí být prázdné.");
+                	            break;
+                	        }
+                	    } catch (Exception e) {
+                	        System.out.println("Chyba: Neplatný vstup pro jméno.");
+                	        break;
+                	    }
+                	    
+                	    
                 	    System.out.print("Zadejte příjmení studenta: ");
-                	    String lastName = scanner.nextLine();
+                	    String lastName = scanner.nextLine().trim();
+                	    if (lastName.isEmpty()) {
+                	        System.out.println("Příjmení nesmí být prázdné.");
+                	        break;
+                	    }
+                	    
+                	    
 
                 	    System.out.print("Zadejte datum narození (ve formátu dd.MM.yyyy): ");
                 	    String birthDateStr = scanner.nextLine();
@@ -93,8 +112,19 @@ public class Main {
                 	
                 	System.out.println("\n--- Přidání známky studentovi ---");
                     System.out.print("Zadejte ID studenta: ");
-                    int studentId = scanner.nextInt();
-                    scanner.nextLine(); 
+                    
+                    int studentId;
+                    
+                    try {
+                        studentId = scanner.nextInt();
+                        scanner.nextLine(); 
+                    } catch (InputMismatchException e) {
+                        System.out.println("Chyba: Zadejte číselné ID.");
+                        scanner.nextLine(); 
+                        break;
+                    }
+                    
+                  
 
                     try {
                         Student student = database.findStudentById(studentId);
@@ -108,6 +138,10 @@ public class Main {
                         System.out.println("Chyba: " + e.getMessage());
                     } catch (IllegalArgumentException e) {
                         System.out.println("Chybná známka: " + e.getMessage());
+                    } catch (InputMismatchException e) {
+                    	System.out.println("Zadejte číselnou hodnotu.");
+                    	scanner.nextLine(); 
+                    	
                     }
                 	
                 	
@@ -117,8 +151,17 @@ public class Main {
                 	
                 	System.out.println("\n--- Propustit studenta ---");
                 	System.out.print("Zadejte ID studenta: ");
-                	int student_id = scanner.nextInt();
-                	scanner.nextLine(); 
+                	int student_id;
+                	
+                       
+                       try {
+                    	   student_id = scanner.nextInt();
+                           scanner.nextLine(); 
+                       } catch (InputMismatchException e) {
+                           System.out.println("Chyba: Zadejte číselné ID.");
+                           scanner.nextLine(); 
+                           break;
+                       }
 
                 	try {
                 	    database.removeStudentById(student_id);
@@ -131,8 +174,17 @@ public class Main {
                     break;
                 case 4:
                 	System.out.print("Zadejte ID studenta: ");
-                	int stnd_id = scanner.nextInt();
-                	scanner.nextLine(); 
+                	int stnd_id ;
+                	
+                	
+                	 try {
+                		 stnd_id = scanner.nextInt();
+                         scanner.nextLine(); 
+                     } catch (InputMismatchException e) {
+                         System.out.println("Chyba: Zadejte číselné ID.");
+                         scanner.nextLine(); 
+                         break;
+                     }
 
                 	try {
                 	    database.printStudentById(stnd_id);
@@ -146,8 +198,18 @@ public class Main {
                 	
                 	System.out.println("\n--- Spustit dovednost studenta ---");
                     System.out.print("Zadejte ID studenta: ");
-                    int s_id = scanner.nextInt();
-                    scanner.nextLine(); 
+                    int s_id;
+                   
+                    
+                    
+               	 try {
+               		s_id = scanner.nextInt();
+                     scanner.nextLine(); 
+                 } catch (InputMismatchException e) {
+                     System.out.println("Chyba: Zadejte číselné ID.");
+                     scanner.nextLine(); 
+                     break;
+                 }
 
                     try {
                         database.executeSkillById(s_id);     
