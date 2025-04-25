@@ -270,7 +270,7 @@ public class Main {
                         int expectedId = Integer.parseInt(scanner.nextLine());
 
                         database.loadStudentFromFile(fileToLoad, expectedId);
-                        System.out.println("Student byl úspěšně načten.");
+                        
                     } catch (NumberFormatException e) {
                         System.out.println("Chyba: Neplatné ID (musí být číslo).");
                     } catch (IllegalArgumentException | IllegalStateException e) {

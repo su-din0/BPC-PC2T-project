@@ -78,9 +78,6 @@ public abstract class Student  implements Serializable  {
     public abstract String getStudyProgram();
 
     private void setBirthday(Date birthday) {
-        if (birthday == null || birthday.after(new Date())) {
-            throw new IllegalArgumentException("Neplatné datum narození.");
-        }
         this.birthday = birthday;
     }
 

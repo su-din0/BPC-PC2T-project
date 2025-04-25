@@ -279,6 +279,8 @@ public class Database {
                 System.out.println("Student s ID " + student.getId() + " už existuje v databázi. Načtení bylo přerušeno.");
                 return;
             }
+            
+            System.out.println(student.getId());
 
             this.students.put(student.getId(), student);
             System.out.println("Student byl úspěšně načten ze souboru: " + fileName);
@@ -288,16 +290,7 @@ public class Database {
         }
     }
 
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+ 
     private void validate(Integer id) {
         if (this.students.isEmpty()) throw new IllegalStateException("Databáze je prázdná.");
         if (id == null) throw new IllegalArgumentException("ID studenta nesmí být null.");
