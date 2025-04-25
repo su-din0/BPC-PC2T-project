@@ -32,8 +32,17 @@ public class Main {
             System.out.println("11. Ukončit program");
             System.out.print("Zadej volbu: ");
 
-            int volba = scanner.nextInt();
-            scanner.nextLine(); 
+            int volba;
+            System.out.print("Zadej volbu: ");
+            String input = scanner.nextLine();
+
+            try {
+                volba = Integer.parseInt(input);
+            } catch (NumberFormatException e) {
+                System.out.println("Chyba: Neplatná volba. Zadej číslo.");
+                continue; 
+            }
+
 
             switch (volba) {
                 case 1:
@@ -160,33 +169,54 @@ public class Main {
                     database.GroupCount();
                     break;
                 case 9:
-                	 System.out.println("\n--- Uložení studenta do souboru ---");
-                	    System.out.print("Zadejte ID studenta: ");
-                	    int saveId = scanner.nextInt();
-                	    scanner.nextLine();
+                    System.out.println("\n--- Uložení studenta do souboru ---");
+                    try {
+                        System.out.print("Zadejte ID studenta: ");
+                        int saveId = Integer.parseInt(scanner.nextLine());
 
-                	    System.out.print("Zadejte název souboru pro uložení (např. student.dat): ");
-                	    String fileName = scanner.nextLine();
+                        System.out.print("Zadejte název souboru pro uložení (např. student.dat): ");
+                        String fileName = scanner.nextLine().trim();
 
-                	    try {
-                	        database.saveStudentToFile(saveId, fileName);
-                	    } catch (IllegalStateException | IllegalArgumentException e) {
-                	        System.out.println("Chyba: " + e.getMessage());
-                	    }
-                    break;  
+                        if (fileName.isEmpty()) {
+                            System.out.println("Chyba: Název souboru nesmí být prázdný.");
+                            break;
+                        }
+
+                        database.saveStudentToFile(saveId, fileName);
+                        System.out.println("Student byl úspěšně uložen.");
+                    } catch (NumberFormatException e) {
+                        System.out.println("Chyba: Neplatné ID (musí být číslo).");
+                    } catch (IllegalStateException | IllegalArgumentException e) {
+                        System.out.println("Chyba: " + e.getMessage());
+                    } catch (Exception e) {
+                        System.out.println("Neočekávaná chyba při ukládání: " + e.getMessage());
+                    }
+                    break;
+
                 case 10:
                     System.out.println("\n--- Načtení studenta ze souboru ---");
+                    try {
+                        System.out.print("Zadejte název souboru (např. student.dat): ");
+                        String fileToLoad = scanner.nextLine().trim();
 
-                    System.out.print("Zadejte název souboru (např. student.dat): ");
-                    String fileToLoad = scanner.nextLine();
+                        if (fileToLoad.isEmpty()) {
+                            System.out.println("Chyba: Název souboru nesmí být prázdný.");
+                            break;
+                        }
 
-                    System.out.print("Zadejte očekávané ID studenta: ");
-                    int expectedId = scanner.nextInt();
-                    scanner.nextLine(); 
+                        System.out.print("Zadejte očekávané ID studenta: ");
+                        int expectedId = Integer.parseInt(scanner.nextLine());
 
-                    database.loadStudentFromFile(fileToLoad, expectedId);
-                    break;
-               
+                        database.loadStudentFromFile(fileToLoad, expectedId);
+                        System.out.println("Student byl úspěšně načten.");
+                    } catch (NumberFormatException e) {
+                        System.out.println("Chyba: Neplatné ID (musí být číslo).");
+                    } catch (IllegalArgumentException | IllegalStateException e) {
+                        System.out.println("Chyba: " + e.getMessage());
+                    } catch (Exception e) {
+                        System.out.println("Neočekávaná chyba při načítání: " + e.getMessage());
+                    }
+                    break;               
                 case 11:
                 	
                     database.saveToDatabase();

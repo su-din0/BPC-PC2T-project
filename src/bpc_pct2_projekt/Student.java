@@ -1,12 +1,14 @@
 package bpc_pct2_projekt;
 
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public abstract class Student {
-    protected static Integer nextId = 0;
+public abstract class Student  implements Serializable  {
+   
+	protected static Integer nextId = 0;
 
     protected Integer id;
     protected String firstName;
@@ -76,10 +78,12 @@ public abstract class Student {
     public abstract String getStudyProgram();
 
     private void setBirthday(Date birthday) {
-        if (birthday == null || birthday.after(new Date()));
-
+        if (birthday == null || birthday.after(new Date())) {
+            throw new IllegalArgumentException("Neplatné datum narození.");
+        }
         this.birthday = birthday;
     }
+
 
     @Override
     public String toString() {
