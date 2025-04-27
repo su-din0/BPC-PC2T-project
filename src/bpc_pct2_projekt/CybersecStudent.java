@@ -8,7 +8,7 @@ import java.util.Date;
 
 public class CybersecStudent extends Student implements Serializable {
 
-    
+
     private static final long serialVersionUID = 1L;
 
     public CybersecStudent(String firstName, String lastName, Date birthday) {
@@ -16,7 +16,7 @@ public class CybersecStudent extends Student implements Serializable {
     }
 
     public CybersecStudent() {
-        super("", "", new Date());  
+        super("", "", new Date());
     }
 
     @Override

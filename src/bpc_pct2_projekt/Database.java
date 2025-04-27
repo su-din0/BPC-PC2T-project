@@ -18,8 +18,8 @@ public class Database {
     public Database() {
         this.students = new HashMap<>();
     }
-    
-    
+
+
     //pridani studenta
     public TelecomStudent addTelecomStudent(String firstName, String lastName, Date birthday) {
         TelecomStudent student = new TelecomStudent(firstName, lastName, birthday);
@@ -34,8 +34,8 @@ public class Database {
 
         return student;
     }
-    
-    
+
+
     //hledani studenta
     public Student findStudentById(Integer id) {
         this.validate(id);
@@ -45,9 +45,8 @@ public class Database {
 
         return student;
     }
-    
-    
-    
+
+
     //odstraneni studenta
     public void removeStudentById(Integer id) {
         this.validate(id);
@@ -58,28 +57,27 @@ public class Database {
 
     //vypsaní studenta
     public void printStudentById(Integer id) {
-    	this.validate(id);
-    	
-    	Student student = this.students.get(id);
-    	
-    	
-        
+        this.validate(id);
+
+        Student student = this.students.get(id);
+
+
         if (student == null) {
             System.out.println("Student s ID " + id + " nebyl nalezen.");
             return;
         }
-        
-        
+
+
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
 
         System.out.println("\n--- Informace o studentovi ---");
         System.out.println("ID: " + student.getId());
         System.out.println("Jméno: " + student.getFirstName() + " " + student.getLastName());
         System.out.println("Datum narození: " + dateFormat.format(student.getBirthday()));
-        System.out.println("Studijni průměr: "+ student.getAverageGrade());
+        System.out.println("Studijni průměr: " + student.getAverageGrade());
     }
-    
-    
+
+
     //vypis dovednosti 
     public void executeSkillById(Integer id) {
         this.validate(id);
@@ -91,21 +89,21 @@ public class Database {
             System.out.println("Chyba: " + e.getMessage());
         }
     }
-    
-    
+
+
     //serazeni podle abecedy
-    
+
     public void printAllStudentsSortedByLastName() {
-    	
-    	if (this.students.isEmpty()) {
-    	    System.out.println("Databáze je prázdná. Žádní studenti k vypsání.");
-    	    return;
-    	}
+
+        if (this.students.isEmpty()) {
+            System.out.println("Databáze je prázdná. Žádní studenti k vypsání.");
+            return;
+        }
 
 
         List<Student> studentList = new ArrayList<>(this.students.values());
 
-        
+
         studentList.sort(Comparator.comparing(Student::getLastName));
 
         System.out.println("--- Cybersecurity studenti ---");
@@ -131,14 +129,12 @@ public class Database {
         String year = yearFormat.format(birthday);
 
         System.out.println(student.getId() + " " + student.getFirstName() + ", " +
-                           student.getLastName() + ", " + 
-                           year + ", " +
-                           student.getAverageGrade());
+                student.getLastName() + ", " +
+                year + ", " +
+                student.getAverageGrade());
     }
-    
-    
-    
-    
+
+
     //Vypis prumeru podle oboru
     public void AverageGradeByGroup() {
         if (this.students.isEmpty()) {
@@ -153,15 +149,15 @@ public class Database {
         int telecomSum = 0;
         int telecomCount = 0;
 
-        
+
         for (Student s : studentList) {
             if (s instanceof CybersecStudent) {
-                cyberSum += s.getAverageGrade(); 
+                cyberSum += s.getAverageGrade();
                 cyberCount++;
             }
         }
 
-       
+
         for (Student s : studentList) {
             if (s instanceof TelecomStudent) {
                 telecomSum += s.getAverageGrade();
@@ -186,8 +182,8 @@ public class Database {
         }
     }
 
-   //Pocet studentu ve skupinach
-    
+    //Pocet studentu ve skupinach
+
     public void GroupCount() {
         if (this.students.isEmpty()) {
             throw new IllegalStateException("Databáze je prázdná.");
@@ -198,14 +194,14 @@ public class Database {
         int cyberCount = 0;
         int telecomCount = 0;
 
-        
+
         for (Student s : studentList) {
             if (s instanceof CybersecStudent) {
                 cyberCount++;
             }
         }
 
-       
+
         for (Student s : studentList) {
             if (s instanceof TelecomStudent) {
                 telecomCount++;
@@ -215,10 +211,10 @@ public class Database {
         System.out.println("Cybersecurity studentů: " + cyberCount);
         System.out.println("\nTelekomunikační studentů: " + telecomCount);
     }
-    
+
     public void loadFromDatabase() {
         try {
-            DatabaseInitializer.initializeDatabase(); 
+            DatabaseInitializer.initializeDatabase();
             List<Student> loadedStudents = SqlDatabaseHandler.loadAllStudents();
             students.clear();
             for (Student s : loadedStudents) {
@@ -230,14 +226,11 @@ public class Database {
         }
     }
 
-    
-    
 
-    public void saveToDatabase()
-    {
-    	
+    public void saveToDatabase() {
 
-    	try {
+
+        try {
             SqlDatabaseHandler.saveAllStudents(students);
             System.out.println("Studenti a známky byly úspěšně uloženy.");
         } catch (SQLException e) {
@@ -245,11 +238,8 @@ public class Database {
         }
 
     }
-    
-    
-    
-    
-    
+
+
     public void saveStudentToFile(Integer id, String fileName) {
         this.validate(id);
 
@@ -265,7 +255,7 @@ public class Database {
             System.err.println("Chyba při ukládání studenta do souboru: " + e.getMessage());
         }
     }
-    
+
     public void loadStudentFromFile(String fileName, int expectedId) {
         try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(fileName))) {
             Student student = (Student) ois.readObject();
@@ -279,7 +269,7 @@ public class Database {
                 System.out.println("Student s ID " + student.getId() + " už existuje v databázi. Načtení bylo přerušeno.");
                 return;
             }
-            
+
             System.out.println(student.getId());
 
             this.students.put(student.getId(), student);
@@ -290,7 +280,7 @@ public class Database {
         }
     }
 
- 
+
     private void validate(Integer id) {
         if (this.students.isEmpty()) throw new IllegalStateException("Databáze je prázdná.");
         if (id == null) throw new IllegalArgumentException("ID studenta nesmí být null.");

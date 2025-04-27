@@ -6,9 +6,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public abstract class Student  implements Serializable  {
-   
-	protected static Integer nextId = 0;
+public abstract class Student implements Serializable {
+
+    protected static Integer nextId = 0;
 
     protected Integer id;
     protected String firstName;
@@ -23,7 +23,7 @@ public abstract class Student  implements Serializable  {
         this.setBirthday(birthday);
         this.grades = new ArrayList<>();
     }
-    
+
     public static void setNextId(int next) {
         nextId = next;
     }
@@ -32,7 +32,7 @@ public abstract class Student  implements Serializable  {
     public Integer getId() {
         return id;
     }
-    
+
     public void setId(Integer id) {
         this.id = id;
     }
@@ -74,7 +74,7 @@ public abstract class Student  implements Serializable  {
     }
 
     public abstract void performSkill();
-    
+
     public abstract String getStudyProgram();
 
     private void setBirthday(Date birthday) {
