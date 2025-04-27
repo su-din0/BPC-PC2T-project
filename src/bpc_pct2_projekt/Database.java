@@ -19,7 +19,6 @@ public class Database {
         this.students = new HashMap<>();
     }
 
-
     //pridani studenta
     public TelecomStudent addTelecomStudent(String firstName, String lastName, Date birthday) {
         TelecomStudent student = new TelecomStudent(firstName, lastName, birthday);
@@ -35,7 +34,6 @@ public class Database {
         return student;
     }
 
-
     //hledani studenta
     public Student findStudentById(Integer id) {
         this.validate(id);
@@ -45,7 +43,6 @@ public class Database {
 
         return student;
     }
-
 
     //odstraneni studenta
     public void removeStudentById(Integer id) {
@@ -57,26 +54,15 @@ public class Database {
 
     //vypsaní studenta
     public void printStudentById(Integer id) {
-        this.validate(id);
-
         Student student = this.students.get(id);
-
 
         if (student == null) {
             System.out.println("Student s ID " + id + " nebyl nalezen.");
             return;
         }
 
-
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
-
-        System.out.println("\n--- Informace o studentovi ---");
-        System.out.println("ID: " + student.getId());
-        System.out.println("Jméno: " + student.getFirstName() + " " + student.getLastName());
-        System.out.println("Datum narození: " + dateFormat.format(student.getBirthday()));
-        System.out.println("Studijni průměr: " + student.getAverageGrade());
+        System.out.println(formatStudentInfo(student));
     }
-
 
     //vypis dovednosti 
     public void executeSkillById(Integer id) {
@@ -90,11 +76,8 @@ public class Database {
         }
     }
 
-
     //serazeni podle abecedy
-
     public void printAllStudentsSortedByLastName() {
-
         if (this.students.isEmpty()) {
             System.out.println("Databáze je prázdná. Žádní studenti k vypsání.");
             return;
@@ -134,83 +117,52 @@ public class Database {
                 student.getAverageGrade());
     }
 
-
     //Vypis prumeru podle oboru
     public void AverageGradeByGroup() {
         if (this.students.isEmpty()) {
             throw new IllegalStateException("Databáze je prázdná.");
         }
 
-        List<Student> studentList = new ArrayList<>(this.students.values());
+        int cyberSum = 0, cyberCount = 0;
+        int telecomSum = 0, telecomCount = 0;
 
-        int cyberSum = 0;
-        int cyberCount = 0;
-
-        int telecomSum = 0;
-        int telecomCount = 0;
-
-
-        for (Student s : studentList) {
+        // Průchod daty a výpočet
+        for (Student s : this.students.values()) {
             if (s instanceof CybersecStudent) {
                 cyberSum += s.getAverageGrade();
                 cyberCount++;
-            }
-        }
-
-
-        for (Student s : studentList) {
-            if (s instanceof TelecomStudent) {
+            } else if (s instanceof TelecomStudent) {
                 telecomSum += s.getAverageGrade();
                 telecomCount++;
             }
         }
 
-        System.out.println("--- Cybersecurity studenti ---");
-        if (cyberCount > 0) {
-            double cyberAverage = (double) cyberSum / cyberCount;
-            System.out.printf("Průměr: %.2f\n", cyberAverage);
-        } else {
-            System.out.println("Žádní studenti kyberbezpečnosti.");
-        }
-
-        System.out.println("\n--- Telekomunikační studenti ---");
-        if (telecomCount > 0) {
-            double telecomAverage = (double) telecomSum / telecomCount;
-            System.out.printf("Průměr: %.2f\n", telecomAverage);
-        } else {
-            System.out.println("Žádní studenti telekomunikací.");
-        }
+        // Výstup výsledků
+        printGroupStats("Cybersecurity studenti", cyberSum, cyberCount);
+        printGroupStats("Telekomunikační studenti", telecomSum, telecomCount);
     }
 
-    //Pocet studentu ve skupinach
 
+    //Pocet studentu ve skupinach
     public void GroupCount() {
         if (this.students.isEmpty()) {
             throw new IllegalStateException("Databáze je prázdná.");
         }
 
-        List<Student> studentList = new ArrayList<>(this.students.values());
-
         int cyberCount = 0;
         int telecomCount = 0;
 
-
-        for (Student s : studentList) {
-            if (s instanceof CybersecStudent) {
-                cyberCount++;
-            }
+        // Průchod studenty a spočítání podle typu
+        for (Student s : this.students.values()) {
+            if (s instanceof CybersecStudent) cyberCount++;
+            else if (s instanceof TelecomStudent) telecomCount++;
         }
 
-
-        for (Student s : studentList) {
-            if (s instanceof TelecomStudent) {
-                telecomCount++;
-            }
-        }
-
+        // Výstup výsledků
         System.out.println("Cybersecurity studentů: " + cyberCount);
-        System.out.println("\nTelekomunikační studentů: " + telecomCount);
+        System.out.println("Telekomunikační studentů: " + telecomCount);
     }
+
 
     public void loadFromDatabase() {
         try {
@@ -228,8 +180,6 @@ public class Database {
 
 
     public void saveToDatabase() {
-
-
         try {
             SqlDatabaseHandler.saveAllStudents(students);
             System.out.println("Studenti a známky byly úspěšně uloženy.");
@@ -286,4 +236,26 @@ public class Database {
         if (id == null) throw new IllegalArgumentException("ID studenta nesmí být null.");
         if (id < 0) throw new IllegalArgumentException("ID studenta musí být kladné číslo.");
     }
+
+    private String formatStudentInfo(Student student) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
+
+        return "\n--- Informace o studentovi ---\n" +
+                "ID: " + student.getId() + "\n" +
+                "Jméno: " + student.getFirstName() + " " + student.getLastName() + "\n" +
+                "Datum narození: " + dateFormat.format(student.getBirthday()) + "\n" +
+                "Studijní průměr: " + student.getAverageGrade();
+    }
+
+    private void printGroupStats(String groupName, int sum, int count) {
+        System.out.println("\n--- " + groupName + " ---");
+        if (count == 0) {
+            System.out.println("Žádní studenti v této skupině.");
+            return;
+        }
+
+        double average = (double) sum / count;
+        System.out.printf("Průměr: %.2f\n", average);
+    }
+
 }

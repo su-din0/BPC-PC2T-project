@@ -15,10 +15,6 @@ public class CybersecStudent extends Student implements Serializable {
         super(firstName, lastName, birthday);
     }
 
-    public CybersecStudent() {
-        super("", "", new Date());
-    }
-
     @Override
     public String getStudyProgram() {
         return "kyberbezpecnost";
