@@ -19,7 +19,6 @@ public class Database {
         this.students = new HashMap<>();
     }
 
-    //pridani studenta
     public TelecomStudent addTelecomStudent(String firstName, String lastName, Date birthday) {
         TelecomStudent student = new TelecomStudent(firstName, lastName, birthday);
         this.students.put(student.getId(), student);
@@ -34,7 +33,6 @@ public class Database {
         return student;
     }
 
-    //hledani studenta
     public Student findStudentById(Integer id) {
         this.validate(id);
 
@@ -44,7 +42,6 @@ public class Database {
         return student;
     }
 
-    //odstraneni studenta
     public void removeStudentById(Integer id) {
         this.validate(id);
 
@@ -52,7 +49,6 @@ public class Database {
         if (student == null) throw new IllegalStateException("Student s ID " + id + " nebyl nalezen.");
     }
 
-    //vypsaní studenta
     public void printStudentById(Integer id) {
         Student student = this.students.get(id);
 
@@ -64,7 +60,6 @@ public class Database {
         System.out.println(formatStudentInfo(student));
     }
 
-    //vypis dovednosti 
     public void executeSkillById(Integer id) {
         this.validate(id);
 
@@ -76,7 +71,6 @@ public class Database {
         }
     }
 
-    //serazeni podle abecedy
     public void printAllStudentsSortedByLastName() {
         if (this.students.isEmpty()) {
             System.out.println("Databáze je prázdná. Žádní studenti k vypsání.");
@@ -105,19 +99,6 @@ public class Database {
 
     }
 
-    // Pomocná metoda na výpis jednoho studenta
-    private void printStudentSummary(Student student) {
-        Date birthday = student.getBirthday();
-        SimpleDateFormat yearFormat = new SimpleDateFormat("yyyy");
-        String year = yearFormat.format(birthday);
-
-        System.out.println(student.getId() + " " + student.getFirstName() + ", " +
-                student.getLastName() + ", " +
-                year + ", " +
-                student.getAverageGrade());
-    }
-
-    //Vypis prumeru podle oboru
     public void AverageGradeByGroup() {
         if (this.students.isEmpty()) {
             throw new IllegalStateException("Databáze je prázdná.");
@@ -126,7 +107,6 @@ public class Database {
         int cyberSum = 0, cyberCount = 0;
         int telecomSum = 0, telecomCount = 0;
 
-        // Průchod daty a výpočet
         for (Student s : this.students.values()) {
             if (s instanceof CybersecStudent) {
                 cyberSum += s.getAverageGrade();
@@ -137,13 +117,11 @@ public class Database {
             }
         }
 
-        // Výstup výsledků
         printGroupStats("Cybersecurity studenti", cyberSum, cyberCount);
         printGroupStats("Telekomunikační studenti", telecomSum, telecomCount);
     }
 
 
-    //Pocet studentu ve skupinach
     public void GroupCount() {
         if (this.students.isEmpty()) {
             throw new IllegalStateException("Databáze je prázdná.");
@@ -152,13 +130,11 @@ public class Database {
         int cyberCount = 0;
         int telecomCount = 0;
 
-        // Průchod studenty a spočítání podle typu
         for (Student s : this.students.values()) {
             if (s instanceof CybersecStudent) cyberCount++;
             else if (s instanceof TelecomStudent) telecomCount++;
         }
 
-        // Výstup výsledků
         System.out.println("Cybersecurity studentů: " + cyberCount);
         System.out.println("Telekomunikační studentů: " + telecomCount);
     }
@@ -188,7 +164,6 @@ public class Database {
         }
 
     }
-
 
     public void saveStudentToFile(Integer id, String fileName) {
         this.validate(id);
@@ -230,7 +205,6 @@ public class Database {
         }
     }
 
-
     private void validate(Integer id) {
         if (this.students.isEmpty()) throw new IllegalStateException("Databáze je prázdná.");
         if (id == null) throw new IllegalArgumentException("ID studenta nesmí být null.");
@@ -258,4 +232,14 @@ public class Database {
         System.out.printf("Průměr: %.2f\n", average);
     }
 
+    private void printStudentSummary(Student student) {
+        Date birthday = student.getBirthday();
+        SimpleDateFormat yearFormat = new SimpleDateFormat("yyyy");
+        String year = yearFormat.format(birthday);
+
+        System.out.println(student.getId() + " " + student.getFirstName() + ", " +
+                student.getLastName() + ", " +
+                year + ", " +
+                student.getAverageGrade());
+    }
 }
