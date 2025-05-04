@@ -16,7 +16,7 @@ public class DatabaseInitializer {
                     id INTEGER PRIMARY KEY,
                     first_name TEXT NOT NULL,
                     last_name TEXT NOT NULL,
-                    birth_year INTEGER,
+                    birthday DATE NOT NULL,
                     study_program TEXT
                 );
                 """;

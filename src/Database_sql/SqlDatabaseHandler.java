@@ -13,33 +13,29 @@ public class SqlDatabaseHandler {
         try (Connection conn = DriverManager.getConnection(DatabaseConfig.URL)) {
             conn.setAutoCommit(false); 
 
-            
             try (Statement clear = conn.createStatement()) {
                 clear.execute("DELETE FROM students");
                 clear.execute("DELETE FROM grades");
             }
-
            
-            String sInsert = "INSERT INTO students (id, first_name, last_name, birth_year, study_program) VALUES (?, ?, ?, ?, ?)";
+            String sInsert = "INSERT INTO students (id, first_name, last_name, birthday, study_program) VALUES (?, ?, ?, ?, ?)";
             String gInsert = "INSERT INTO grades (student_id, grade) VALUES (?, ?)";
 
             try (PreparedStatement psStudent = conn.prepareStatement(sInsert);
                  PreparedStatement psGrade = conn.prepareStatement(gInsert)) {
 
-                
                 for (Student s : students.values()) {
-                    Calendar cal = Calendar.getInstance();
-                    cal.setTime(s.getBirthday());
-                    int birthYear = cal.get(Calendar.YEAR);
-
                     psStudent.setInt(1, s.getId());
                     psStudent.setString(2, s.getFirstName());
                     psStudent.setString(3, s.getLastName());
-                    psStudent.setInt(4, birthYear);
+
+                    java.sql.Date sqlBirthday = new java.sql.Date(s.getBirthday().getTime());
+                    psStudent.setDate(4, sqlBirthday);
+
                     psStudent.setString(5, s.getStudyProgram());
                     psStudent.executeUpdate();
 
-                    for (int grade : s.getGrades()) {
+                    for (Integer grade : s.getGrades()) {
                         psGrade.setInt(1, s.getId());
                         psGrade.setInt(2, grade);
                         psGrade.executeUpdate();
@@ -47,15 +43,12 @@ public class SqlDatabaseHandler {
                 }
             }
 
-            
             conn.commit();
         } catch (SQLException e) {
             System.err.println("Chyba při ukládání studentů a známek: " + e.getMessage());
             throw e;
         }
     }
-    
-    
     
     public static List<Student> loadAllStudents() throws SQLException {
         List<Student> students = new ArrayList<>();
@@ -70,14 +63,10 @@ public class SqlDatabaseHandler {
                 int id = rs.getInt("id");
                 String firstName = rs.getString("first_name");
                 String lastName = rs.getString("last_name");
-                int birthYear = rs.getInt("birth_year");
-                String studyProgram = rs.getString("study_program");
 
-                Calendar cal = Calendar.getInstance();
-                cal.set(Calendar.YEAR, birthYear);
-                cal.set(Calendar.MONTH, 0);  
-                cal.set(Calendar.DAY_OF_MONTH, 1);
-                Date birthday = cal.getTime();
+                Date birthday = rs.getDate("birthday");
+
+                String studyProgram = rs.getString("study_program");
 
                 Student student;
                 if (studyProgram.equalsIgnoreCase("telekomunikace")) {
@@ -89,7 +78,6 @@ public class SqlDatabaseHandler {
                 student.setId(id);
                 if (id > maxId) maxId = id;
 
-                
                 String gQuery = "SELECT grade FROM grades WHERE student_id = ?";
                 try (PreparedStatement ps = conn.prepareStatement(gQuery)) {
                     ps.setInt(1, id);
@@ -102,10 +90,7 @@ public class SqlDatabaseHandler {
 
                 students.add(student);
             }
-
-            
             Student.setNextId(maxId + 1);
-
         }
 
         return students;

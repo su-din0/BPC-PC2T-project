@@ -70,20 +70,20 @@ public abstract class Student implements Serializable {
         for (Integer grade : grades) {
             sum += grade;
         }
-        return (float) (sum / grades.size());
+
+        return sum / (float) grades.size();
     }
 
     public abstract void performSkill();
 
     public abstract String getStudyProgram();
 
-    private void setBirthday(Date birthday) {
-        this.birthday = birthday;
-    }
-
-
     @Override
     public String toString() {
         return this.getId() + "\t" + this.getFirstName() + " " + this.getLastName() + "\t" + this.getBirthday();
+    }
+
+    private void setBirthday(Date birthday) {
+        this.birthday = birthday;
     }
 }

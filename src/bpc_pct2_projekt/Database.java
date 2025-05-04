@@ -234,12 +234,15 @@ public class Database {
 
     private void printStudentSummary(Student student) {
         Date birthday = student.getBirthday();
-        SimpleDateFormat yearFormat = new SimpleDateFormat("yyyy");
-        String year = yearFormat.format(birthday);
 
-        System.out.println(student.getId() + " " + student.getFirstName() + ", " +
-                student.getLastName() + ", " +
-                year + ", " +
-                student.getAverageGrade());
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
+        String formattedBirthday = dateFormat.format(birthday);
+
+        System.out.println(student.getId() + " "
+                + student.getFirstName() + " "
+                + student.getLastName() + ", "
+                + formattedBirthday + ", "
+                + student.getAverageGrade());
     }
+
 }
