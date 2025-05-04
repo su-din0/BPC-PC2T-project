@@ -104,10 +104,17 @@ public class Database {
             throw new IllegalStateException("Databáze je prázdná.");
         }
 
-        int cyberSum = 0, cyberCount = 0;
-        int telecomSum = 0, telecomCount = 0;
+        double cyberSum = 0;
+        int cyberCount = 0;
+
+        double telecomSum = 0;
+        int telecomCount = 0;
 
         for (Student s : this.students.values()) {
+            if (s.getGrades().isEmpty()) {
+                continue;
+            }
+
             if (s instanceof CybersecStudent) {
                 cyberSum += s.getAverageGrade();
                 cyberCount++;
@@ -117,9 +124,11 @@ public class Database {
             }
         }
 
+
         printGroupStats("Cybersecurity studenti", cyberSum, cyberCount);
         printGroupStats("Telekomunikační studenti", telecomSum, telecomCount);
     }
+
 
 
     public void GroupCount() {
@@ -221,16 +230,16 @@ public class Database {
                 "Studijní průměr: " + student.getAverageGrade();
     }
 
-    private void printGroupStats(String groupName, int sum, int count) {
-        System.out.println("\n--- " + groupName + " ---");
+    private void printGroupStats(String groupName, double sum, int count) {
         if (count == 0) {
-            System.out.println("Žádní studenti v této skupině.");
+            System.out.printf("Skupina: %s nemá žádné známky.%n", groupName);
             return;
         }
 
-        double average = (double) sum / count;
-        System.out.printf("Průměr: %.2f\n", average);
+        double average = sum / count;
+        System.out.printf("Skupina: %s, Průměrná známka: %.2f%n", groupName, average);
     }
+
 
     private void printStudentSummary(Student student) {
         Date birthday = student.getBirthday();
